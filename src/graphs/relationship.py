@@ -32,4 +32,7 @@ class Relationship(object):
                         return True
         return False
 
+    def __hash__(self):
+        return hash((self.__class__, self.a, self.b, self.registry))
+
 

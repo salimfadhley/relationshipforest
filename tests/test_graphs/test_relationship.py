@@ -41,5 +41,32 @@ class TestRelationship(unittest.TestCase):
         rr = RelationshipRegistry(name="Foo")
         Before, After = rr.new_relationship(name="Before", inverse="After")
         a = Before("A", "B")
-
         self.assertEqual("A Before B (Foo)", str(a))
+
+    def test_hashable(self):
+        rr = RelationshipRegistry(name="Foo")
+        Before, After = rr.new_relationship(name="Before", inverse="After")
+        a = Before("A", "B")
+        self.assertEqual(hash(a), hash(a.inverse.inverse))
+
+    def test_identical(self):
+        rr = RelationshipRegistry(name="Foo")
+
+        Before1, After1 = rr.new_relationship(name="Before", inverse="After")
+        Before2, After2 = rr.new_relationship(name="Before", inverse="After")
+
+        self.assertIs(Before1, Before2)
+        self.assertIs(After1, After2)
+
+
+    # def test_identical_objects_in_other_registries_have_different_hashes(self):
+    #     rr1 = RelationshipRegistry(name="Foo")
+    #     Before1, _ = rr1.new_relationship(name="Before", inverse="After")
+    #
+    #     rr2 = RelationshipRegistry(name="Bar")
+    #     Before1, _ = rr2.new_relationship(name="Before", inverse="After")
+    #
+    #     a1 = Before1("A", "B")
+    #     a2 = Before1("A", "B")
+    #
+    #     self.assertNotEqual(hash(a1), hash(a2))

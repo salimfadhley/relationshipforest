@@ -7,7 +7,7 @@ class Container(object):
         self.relationships = relationships or s()
         self.relationship_registry = relationship_registry
 
-    def add(self, item) -> Container:
+    def add(self, item) -> 'Container':
         return self.__class__(
             contents=self.contents.add(item),
             relationships=self.relationships,
@@ -20,12 +20,18 @@ class Container(object):
     def relate(self,a,b, rel_name:str):
         relationship_type = self.relationship_registry.get_by_name(rel_name)
         relationship = relationship_type(a,b)
-        return self
+
+
+        return self.__class__(
+            contents=self.contents,
+            relationships=self.relationships.add(relationship),
+            relationship_registry=self.relationship_registry
+        )
 
     def __iter__(self):
         yield from self.contents.__iter__()
 
 
-
+Container_ = Container
 
 
